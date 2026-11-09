@@ -1,0 +1,82 @@
+:root{
+  --bg:#040d22; --cyan:#19e3ff; --green:#7dff3a; --yellow:#ffd23a; --red:#ff4d6d; --violet:#b46bff;
+  --panel:rgba(8,26,60,.92); --line:rgba(25,227,255,.45); --txt:#e8f6ff;
+  --font:'Orbitron','Segoe UI',system-ui,-apple-system,Roboto,sans-serif; --sw:230px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;height:100dvh;overflow:hidden;background:var(--bg);color:var(--txt);
+  font-family:var(--font);user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
+[hidden]{display:none!important}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:
+   radial-gradient(900px 600px at 20% 10%,rgba(25,227,255,.16),transparent 60%),
+   radial-gradient(800px 600px at 85% 90%,rgba(180,107,255,.16),transparent 60%),
+   linear-gradient(rgba(25,227,255,.07) 1px,transparent 1px) 0 0/40px 40px,
+   linear-gradient(90deg,rgba(25,227,255,.07) 1px,transparent 1px) 0 0/40px 40px,
+   linear-gradient(#050f2a,#07265a);
+}
+body.playing::before{background:#040d22}
+
+/* palco do jogo (ocupa a tela toda; o campo se ajusta pelo JS) */
+#safe{position:fixed;top:0;left:0;width:0;height:0;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#stage{position:fixed;inset:0;width:100%;height:100vh;height:100dvh}
+#game{display:block;width:100%;height:100%;touch-action:none;-webkit-touch-callout:none}
+.mini{position:absolute;right:max(8px,env(safe-area-inset-right));top:calc(var(--top,0px) + (var(--hud,44px) - 30px)/2);height:30px;
+  background:rgba(4,13,34,.75);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:0 14px;font:700 11px var(--font);
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+
+/* telas */
+.screen{position:fixed;inset:0;display:none;align-items:center;justify-content:center;overflow:auto;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.screen.on{display:flex}
+.screen.dim{background:rgba(2,8,24,.78);}
+.card{width:100%;max-width:420px;margin:auto;text-align:center;display:flex;flex-direction:column;gap:12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,28px);
+  box-shadow:0 0 0 1px rgba(25,227,255,.08),0 0 50px rgba(25,227,255,.18),inset 0 0 30px rgba(25,227,255,.05);}
+.logo{font-size:clamp(44px,12vw,64px);line-height:1;filter:drop-shadow(0 0 14px var(--green))}
+h1{margin:0;font-size:clamp(32px,9vw,50px);line-height:1;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 14px rgba(25,227,255,.5))}
+h2{margin:0;font-size:clamp(22px,6vw,30px);font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;text-shadow:0 0 16px var(--cyan)}
+.sub{margin:0;font-weight:500;font-size:clamp(13px,3.4vw,15px);opacity:.9}
+.hint{margin:0;font-size:12px;opacity:.7;line-height:1.5}
+label{font-weight:700;text-align:left;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan)}
+.toast{margin:0;min-height:16px;font-weight:700;color:var(--red);font-size:13px}
+
+.btn{font:900 clamp(14px,4vw,17px) var(--font);letter-spacing:.12em;text-transform:uppercase;color:#031a14;border:0;border-radius:14px;
+  padding:15px 20px;cursor:pointer;transition:transform .08s,filter .15s,box-shadow .15s}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn:hover:not(:disabled){filter:brightness(1.12)}
+.btn:disabled{filter:grayscale(1) brightness(.6);opacity:.6;cursor:not-allowed}
+.btn.green{background:linear-gradient(135deg,#1fe58a,var(--green));box-shadow:0 0 22px rgba(125,255,58,.45)}
+.btn.yellow{background:linear-gradient(135deg,#ffb23a,var(--yellow));box-shadow:0 0 22px rgba(255,210,58,.45)}
+.btn.cyan{background:linear-gradient(135deg,#19b6ff,var(--cyan));box-shadow:0 0 22px rgba(25,227,255,.45)}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);font-size:13px;padding:11px 16px;box-shadow:none}
+.btn.small{font-size:12px;padding:9px 12px}
+
+input{font:700 clamp(15px,4vw,18px) var(--font);text-align:center;padding:13px;border:1px solid var(--line);border-radius:14px;
+  background:rgba(2,10,28,.8);color:#fff;outline:none;width:100%;user-select:text;-webkit-user-select:text}
+input:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(25,227,255,.4)}
+input::placeholder{color:rgba(232,246,255,.35)}
+input.code{letter-spacing:.4em;text-transform:uppercase;font-size:clamp(20px,6vw,26px);padding-left:calc(13px + .4em)}
+.or{font-weight:700;font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.7;display:flex;align-items:center;gap:10px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.seg{display:flex;gap:8px}
+.seg button{flex:1;font:900 clamp(16px,4.5vw,20px) var(--font);padding:11px 0;border:1px solid var(--line);border-radius:12px;
+  background:rgba(2,10,28,.6);color:var(--txt);cursor:pointer}
+.seg button.sel{background:linear-gradient(135deg,#19b6ff,var(--cyan));color:#031a2a;border-color:transparent;box-shadow:0 0 18px rgba(25,227,255,.5)}
+.seg.ro{pointer-events:none;opacity:.85}
+
+.roomcode{background:rgba(2,10,28,.8);border:1px solid var(--cyan);border-radius:16px;padding:8px 10px;box-shadow:0 0 22px rgba(25,227,255,.3)}
+.roomcode small{display:block;font-weight:700;font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.65}
+.roomcode b{font-size:clamp(34px,10vw,46px);letter-spacing:.3em;padding-left:.3em;color:#fff;text-shadow:0 0 16px var(--cyan)}
+#plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+#plist li{display:flex;align-items:center;gap:12px;background:rgba(2,10,28,.6);border:1px solid var(--line);
+  border-radius:14px;padding:9px 12px;font-weight:700;font-size:14px;text-align:left}
+#plist li i{width:16px;height:16px;border-radius:50%;flex:none;box-shadow:0 0 12px currentColor}
+#plist li.empty{opacity:.45;font-weight:500}
+.trophy{font-size:68px;line-height:1;filter:drop-shadow(0 0 18px var(--yellow))}
+
+@media (max-height:640px){.card{gap:8px;padding:14px}.logo{font-size:40px}}
+
